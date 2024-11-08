@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS student_passwords;
 
 CREATE DATABASE student_passwords DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
-CREATE USER IF NOT EXISTS 'passwords_user' @ 'localhost' IDENTIFIED BY '';
+CREATE USER IF NOT EXISTS 'passwords_user'@'localhost' IDENTIFIED BY '';
 GRANT ALL PRIVILEGES ON student_passwords.* TO 'passwords_user' @ 'localhost';
 
 USE student_passwords;
