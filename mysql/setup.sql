@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS passwords;
+DROP DATABASE IF EXISTS student_passwords;
 
-CREATE DATABASE passwords DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+CREATE DATABASE student_passwords DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
-USE passwords;
+USE student_passwords;
 SET block_encryption_mode = 'aes-256-cbc';
 SET @key_str = UNHEX(SHA2('secret password secret password ', 256));
 SET @init_vector = X'C777333AAFABDFEA1988998985546789';
