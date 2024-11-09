@@ -60,6 +60,7 @@ VALUES
   ("saleshopstop", "brenna", "mullings", "mulls@stopshop.com"),
   ("savingbrands", "rahn", "kazowski", "kaz@brand.com"),
   ("warehouselifter", "lexi", "brimmings", "bestlift@atoz.com");
+
 INSERT INTO logins
   (user_name, website_name, password, comment, update_time)
 VALUES

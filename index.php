@@ -1,2 +1,3 @@
 <?php
-//require "includes/config.php"
+require "includes/helpers.php";
+$connection_successful = checkConnection();
