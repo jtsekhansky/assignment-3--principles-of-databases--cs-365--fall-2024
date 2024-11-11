@@ -8,3 +8,18 @@ h1 {
 h2 {
   text-align: center;
 }
+form {
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  display:flex;
+}
+.btn {
+  background-color: aqua;
+  color: #e50c0c;
+  font: bold 34px Arial;
+  width: 200px;
+  height: 100px;
+  vertical-align: middle;
+  display: inline-flex;
+}

@@ -25,5 +25,13 @@ if(strpos( $connection_successful, 'fail' ) !== false){
             <?php echo $connection_successful ?></font>
             </p>
         </header>
+        <p>
+          <form action="index.php">
+          <input type="submit" class=btn name="insert" value="Insert" onclick="insert()" />
+          <input type="submit" class=btn name="search" value="Search" onclick="search()" />
+          <input type="submit" class=btn name="update" value="Update" onclick="update()" />
+          <input type="submit" class=btn name="delete" value="Delete" onclick="delete()" />
+          </form>
+        </p>
     </body>
 </html>
