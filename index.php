@@ -5,6 +5,10 @@ $messagecolor = 'green';
 if(strpos( $connection_successful, 'fail' ) !== false){
   $messagecolor = 'red';
 }
+
+if(isset($_POST['search'])){
+    header("location: search.php");
+}
 ?>
 
 <!DOCTYPE HTML>
@@ -26,9 +30,9 @@ if(strpos( $connection_successful, 'fail' ) !== false){
             </p>
         </header>
         <p>
-          <form action="index.php">
+          <form method="POST" action=''>
           <input type="submit" class=btn name="insert" value="Insert" onclick="insert()" />
-          <input type="submit" class=btn name="search" value="Search" onclick="search()" />
+          <input type="submit" class=btn name="search" value="Search" />
           <input type="submit" class=btn name="update" value="Update" onclick="update()" />
           <input type="submit" class=btn name="delete" value="Delete" onclick="delete()" />
           </form>
