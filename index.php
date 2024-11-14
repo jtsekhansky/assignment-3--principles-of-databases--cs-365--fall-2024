@@ -8,6 +8,8 @@ if(strpos( $connection_successful, 'fail' ) !== false){
 
 if(isset($_POST['search'])){
     header("location: search.php");
+}elseif(isset($_POST['insert'])){
+    header("location: insert.php");
 }
 ?>
 
