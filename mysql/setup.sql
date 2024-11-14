@@ -50,9 +50,9 @@ Values
 INSERT INTO users
   (user_name, first_name, last_name, email)
 VALUES
-  ("jtisawesome", "jacob", "tsekansky", "j@bing.com"),
-  ("collegegood", "jacob", "tsekansky", "j@h0rtfurd.com"),
-  ("schoolgreat", "david", "tsekansky", "d@cheshire.com"),
+  ("jtisawesome", "jacob", "tsekhansky", "j@bing.com"),
+  ("collegegood", "jacob", "tsekhansky", "j@h0rtfurd.com"),
+  ("schoolgreat", "david", "tsekhansky", "d@cheshire.com"),
   ("blackbelt", "joe", "schmoe", "j@schmoe.com"),
   ("bookwarrior", "rahn", "kazowski", "rkazowski@books.org"),
   ("bestdriver", "lexi", "brimmings", "lbrims@toyota.com"),

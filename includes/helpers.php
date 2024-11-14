@@ -24,7 +24,19 @@ function selectTupleBasedOnWord($word){
       $connection = new PDO ("mysql:host=" .DBHOST."; dbname=" .DBNAME, DBUSER, DBPASS);
 
       $SQLstatement="
-      SELECT DISTINCT logins.user_name FROM logins WHERE
+      SELECT logins.user_name AS username,
+      logins.website_name AS websitename,
+      logins.comment AS comment,
+      websites.website_url AS url,
+      users.first_name AS firstname,
+      users.last_name AS lastname,
+      users.email AS email
+      FROM logins, users, websites
+      WHERE
+      logins.website_name = websites.website_name AND
+      logins.user_name = users.user_name AND
+      logins.user_name IN
+      (SELECT DISTINCT logins.user_name FROM logins WHERE
       user_name LIKE '%".$word."%' OR
       website_name LIKE '%".$word."%' OR
       comment LIKE '%".$word."%'
@@ -36,23 +48,28 @@ function selectTupleBasedOnWord($word){
       UNION
       SELECT DISTINCT logins.user_name FROM logins, websites WHERE
       logins.website_name = websites.website_name AND
-      websites.website_url LIKE '%".$word."%'
+      websites.website_url LIKE '%".$word."%')
       ";
 
      $statement = $connection -> prepare($SQLstatement);
      $statement -> execute();
 
-     $found = false;
-     while ($row = $statement -> fetch()){
-        if($field_value = $row["user_name"]){
-            $found = true;
-            $return = $return . $field_value . "\n";
+     if(count($statement -> fetchAll()) != 0){
+        foreach ($connection -> query($SQLstatement) as $r){
+            $return = $return .
+              "<tr>".
+              "<td>". $r['username'] . "</td>".
+              "<td>". $r['firstname'] . "</td>".
+              "<td>". $r['lastname'] . "</td>".
+              "<td>". $r['email'] . "</td>".
+              "<td>". $r['websitename'] . "</td>".
+              "<td>". $r['url'] . "</td>".
+              "<td>". $r['comment'] . "</td>".
+              "</tr>\n";
         }
-     }
-     if($found = false){
-        $return = "no results found";
-     }
     }
+     }
+
     catch(PDOException $e){
       $return = "connection failed:".$e -> getMessage();
     }
