@@ -7,9 +7,9 @@ if(strpos( $connection_successful, 'fail' ) !== false){
 }
 
 if(isset($_POST['search'])){
-    header("location: search.php");
+    header("location: includes/search.php");
 }elseif(isset($_POST['insert'])){
-    header("location: insert.php");
+    header("location: includes/insert.php");
 }
 ?>
 
@@ -38,6 +38,9 @@ if(isset($_POST['search'])){
           <input type="submit" class=btn name="update" value="Update" onclick="update()" />
           <input type="submit" class=btn name="delete" value="Delete" onclick="delete()" />
           </form>
+        </p>
+        <p>
+            <h3>Click on button to perform an operation</h3>
         </p>
     </body>
 </html>
