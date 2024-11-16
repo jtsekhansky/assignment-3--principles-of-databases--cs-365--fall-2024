@@ -60,17 +60,16 @@ if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])
                 </font>
                 </p>';
         }else{
-            /*
-
-
-        $insertresult=selectTupleBasedOnWord($_POST['searchword']);
-        if($searchresult==""){
-            $noresult='<br><br><p>
-                    <font color="red">
-                NO RESULT FOUND
-                </font>
-                </p>';
-        }*/
+            $insertresult=insertTupleBasedOnWords(
+                $_POST['username'],
+                $_POST['password'],
+                $_POST['firstname'],
+                $_POST['lastname'],
+                $_POST['email'],
+                $_POST['website_name'],
+                $_POST['website_URL'],
+                $_POST['comment']
+            );
         }
     }
     $actionscreen='

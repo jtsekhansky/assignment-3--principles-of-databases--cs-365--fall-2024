@@ -76,3 +76,74 @@ function selectTupleBasedOnWord($word){
     return $return;
 }
 
+function insertTupleBasedOnWords($username, $password, $firstname, $lastname, $email, $website_name, $website_URL, $comment){
+    $return = "";
+    try{
+      include_once "config.php";
+
+      $connection = new PDO ("mysql:host=" .DBHOST."; dbname=" .DBNAME, DBUSER, DBPASS);
+
+      $SQLstatement='
+      SELECT logins.user_name AS username
+      FROM logins
+      WHERE
+      logins.user_name = "'.$username.'"';
+
+     $statement = $connection -> prepare($SQLstatement);
+     $statement -> execute();
+
+     if(count($statement -> fetchAll()) != 0){
+        return "name $username already exists";
+     }
+
+     $SQLstatement='
+      SELECT logins.website_name AS websitename
+      FROM logins
+      WHERE
+      logins.website_name = "'.$website_name.'"';
+
+     $statement = $connection -> prepare($SQLstatement);
+     $statement -> execute();
+
+     if(count($statement -> fetchAll()) != 0){
+        return "Website $website_name already exists";
+     }
+
+     $SQLstatement='
+      INSERT INTO websites
+      (website_name, website_url)
+      VALUES
+      ("'.$website_name.'", "'.$website_URL.'")
+      ';
+
+      $connection -> query($SQLstatement);
+
+     $SQLstatement='
+      INSERT INTO users
+      (user_name, first_name, last_name, email)
+      VALUES
+      ("'.$username.'", "'.$firstname.'", "'.$lastname.'", "'.$email.'")
+      ';
+
+     $connection -> query($SQLstatement);
+
+     $SQLstatement='
+      INSERT INTO logins
+      (user_name, website_name, password, comment, update_time)
+      VALUES
+      ("'.$username.'", "'.$website_name.'", aes_encrypt('.
+        "'".$password."'".',UNHEX(SHA2("'.KEY_STR.'", 256)), '
+        .INIT_VECTOR
+        .'),"'
+        .$comment.'",  CURRENT_TIMESTAMP())
+      ';
+
+     $connection -> query($SQLstatement);
+     return "Insertion Successfull";
+    }
+    catch(PDOException $e){
+      $return = "connection failed:".$e -> getMessage();
+    }
+    return $return;
+}
+
