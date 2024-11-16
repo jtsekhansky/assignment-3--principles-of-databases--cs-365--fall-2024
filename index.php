@@ -5,11 +5,14 @@ $messagecolor = 'green';
 $actionscreen='';
 $noresult='';
 $searchresult='';
+$insertresult='';
 if(strpos( $connection_successful, 'fail' ) !== false){
   $messagecolor = 'red';
 }
 
 if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])){
+    $searchresult='';
+    $noresult='';
     if(isset($_POST['searchform'])){
         $searchresult=selectTupleBasedOnWord($_POST['searchword']);
         if($searchresult==""){
@@ -19,16 +22,13 @@ if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])
                 </font>
                 </p>';
         }
-    }else if(isset($_POST['rs'])){
-        $searchresult='';
-        $noresult='';
     }
     $actionscreen='
     <form method="post" action="">
             <input type="submit" class=btn name="searchform" value="RunSearch" />
             <input type="submit" class=btn name="rs" value="Refresh" />
             <br><br>
-                Enter search criteria and click on SEARCH button: <input type="text" name="searchword">
+                Enter search criteria and click on RunSEARCH button: <input type="text" name="searchword">
                 '.$noresult.'
           </form>
           <br><br>
@@ -51,8 +51,71 @@ if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])
             </tbody>
           </table>
           ';
-}elseif(isset($_POST['insert'])){
-    header("location: includes/insert.php");
+}elseif(isset($_POST['insert']) or isset($_POST['insertform'])){
+    if(isset($_POST['insertform'])){
+        if(empty($_POST['username']) or empty($_POST['website_name'])){
+            $insertresult='<br><br><p>
+                    <font color="red">
+                Username and Website name must not be blank
+                </font>
+                </p>';
+        }else{
+            /*
+
+
+        $insertresult=selectTupleBasedOnWord($_POST['searchword']);
+        if($searchresult==""){
+            $noresult='<br><br><p>
+                    <font color="red">
+                NO RESULT FOUND
+                </font>
+                </p>';
+        }*/
+        }
+    }
+    $actionscreen='
+    <form method="post" action="">
+            <input type="submit" class=btn name="insertform" value="RunInsert" />
+
+            <fieldset>
+            <legend>Enter field values and click on RunINSERT button</legend>
+            <div>
+                <label for="username">Username: </label>
+                <input type="text" id="username" name="username"/>
+            </div>
+            <div>
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password"/>
+            </div>
+            <div>
+                <label for="firstname">First Name: </label>
+                <input type="text" id="firstname" name="firstname"/>
+            </div>
+            <div>
+                <label for="lastname">Last Name: </label>
+                <input type="text" id="lastname" name="lastname"/>
+            </div>
+            <div>
+                <label for="email">Email: </label>
+                <input type="text" id="email" name="email"/>
+            </div>
+            <div>
+                <label for="website_name">Website Name: </label>
+                <input type="text" id="website_name" name="website_name"/>
+            </div>
+            <div>
+                <label for="website_URL">Website URL: </label>
+                <input type="text" id="website_URL" name="website_URL"/>
+            </div>
+            <div>
+                <label for="comment">Comment: </label>
+                <textarea id="comment" rows="4" cols="40" name="comment"></textarea>
+            </div>
+
+           </fieldset>
+          </form>
+          '.$insertresult .'
+          ';
 }
 ?>
 
