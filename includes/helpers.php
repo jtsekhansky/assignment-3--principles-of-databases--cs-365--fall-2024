@@ -23,6 +23,9 @@ function selectTupleBasedOnWord($word){
 
       $connection = new PDO ("mysql:host=" .DBHOST."; dbname=" .DBNAME, DBUSER, DBPASS);
 
+      $SQLstatement="set block_encryption_mode = 'aes-256-cbc'";
+      $connection -> exec($SQLstatement);
+
       $SQLstatement="
       SELECT logins.user_name AS username,
       logins.website_name AS websitename,
@@ -39,7 +42,11 @@ function selectTupleBasedOnWord($word){
       (SELECT DISTINCT logins.user_name FROM logins WHERE
       user_name LIKE '%".$word."%' OR
       website_name LIKE '%".$word."%' OR
-      comment LIKE '%".$word."%'
+      comment LIKE '%".$word."%' OR
+      ".' CAST(AES_DECRYPT(logins.password, '.
+        'UNHEX(SHA2('."'".KEY_STR."'".', 256))'
+        .", ".INIT_VECTOR.') AS CHAR)'
+      ." LIKE '%".$word."%'
       UNION
       SELECT DISTINCT users.user_name FROM users WHERE
       first_name LIKE '%".$word."%' OR
@@ -67,8 +74,8 @@ function selectTupleBasedOnWord($word){
               "<td>". $r['comment'] . "</td>".
               "</tr>\n";
         }
-    }
      }
+    }
 
     catch(PDOException $e){
       $return = "connection failed:".$e -> getMessage();
@@ -262,7 +269,7 @@ function updateTuple($attr, $ptnword, $exact, $rattr, $repword){
             }
           }
          $connection -> exec($SQLstatement);
-         //$return=$SQLstatement;
+         $return='update complete!';
 
     }
     catch(PDOException $e){
