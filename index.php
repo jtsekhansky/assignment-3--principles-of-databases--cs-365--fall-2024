@@ -6,6 +6,7 @@ $actionscreen='';
 $noresult='';
 $searchresult='';
 $insertresult='';
+$deleteresult='';
 if(strpos( $connection_successful, 'fail' ) !== false){
   $messagecolor = 'red';
 }
@@ -115,7 +116,61 @@ if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])
           </form>
           '.$insertresult .'
           ';
+}elseif(isset($_POST['delete']) or isset($_POST['deleteform'])){
+    if(isset($_POST['deleteform'])){
+        if(empty($_POST['attribute']) or empty($_POST['deleteword']) or empty($_POST['exact'])){
+            $deleteresult='<br><br><p>
+                    <font color="red">
+                field selection and pattern must not be blank
+                </font>
+                </p>';
+        }else{
+            $deleteresult=deleteTuple(
+                $_POST['attribute'], $_POST['deleteword'], $_POST['exact']
+            );
+        }
+
+
+    }
+    $actionscreen='
+    <form method="post" action="">
+            <input type="submit" class=btn name="deleteform" value="RunDelete" />
+            <fieldset>
+            <legend>Select field from list and enter pattern, then click on RunDELETE button</legend>
+            <br>
+            <div>
+                <select name="attribute" id="attribute">
+                    <option value="logins.user_name">Username</option>
+                    <option value="logins.website_name">Website Name</option>
+                    <option value="logins.password">Password</option>
+                    <option value="logins.comment">Comment</option>
+                    <option value="users.first_name">First Name</option>
+                    <option value="users.last_name">Last Name</option>
+                    <option value="users.email">Email</option>
+                    <option value="websites.website_url">Website URL</option>
+                </select>
+            </div>
+            <br><br>
+            <div>
+                <label for="deleteword">Enter search pattern for deletion: </label>
+                <input type="text" id="deleteword" name="deleteword"/>
+            </div>
+            <br>
+            <div>
+                <p>Exact Match:</p>
+                <input type="radio" id="yes" name="exact" value="yes">
+                <label for="yes">yes</label>
+                <br>
+                <input type="radio" id="no" name="exact" value="no">
+                <label for="no">no</label>
+            </div>
+
+            </fieldset>
+    </form>
+    '.$deleteresult.'
+    ';
 }
+//else{}
 ?>
 
 <!DOCTYPE HTML>
@@ -138,10 +193,10 @@ if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])
         </header>
         <p>
           <form method="POST" action=''>
-          <input type="submit" class=btn name="insert" value="Insert" onclick="insert()" />
+          <input type="submit" class=btn name="insert" value="Insert" />
           <input type="submit" class=btn name="search" value="Search" />
-          <input type="submit" class=btn name="update" value="Update" onclick="update()" />
-          <input type="submit" class=btn name="delete" value="Delete" onclick="delete()" />
+          <input type="submit" class=btn name="update" value="Update" />
+          <input type="submit" class=btn name="delete" value="Delete" />
           </form>
         </p>
         <p>

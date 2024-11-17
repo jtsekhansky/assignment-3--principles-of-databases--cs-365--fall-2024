@@ -147,3 +147,55 @@ function insertTupleBasedOnWords($username, $password, $firstname, $lastname, $e
     return $return;
 }
 
+function deleteTuple($attr, $dltword, $exact){
+    $return = "";
+    try{
+      include_once "config.php";
+
+      $connection = new PDO ("mysql:host=" .DBHOST."; dbname=" .DBNAME, DBUSER, DBPASS);
+      $connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+      $SQLstatement='SET SQL_SAFE_UPDATES=0';
+
+      $connection -> exec($SQLstatement);
+
+      $SQLstatement="set block_encryption_mode = 'aes-256-cbc'";
+      $connection -> exec($SQLstatement);
+
+      $SQLstatement='DELETE logins, users, websites
+        FROM logins, users, websites
+        WHERE users.user_name=logins.user_name
+        AND logins.website_name=websites.website_name
+        AND ';
+      if($attr!="logins.password"){
+        if($exact=="no"){
+            $SQLstatement=$SQLstatement.$attr.' LIKE "%'.$dltword.'%" ';
+        }else{
+            $SQLstatement=$SQLstatement.$attr.'="'.$dltword.'" ';
+        }
+      }else{
+        if($exact=="no"){
+            $SQLstatement=$SQLstatement.
+            'CAST(AES_DECRYPT(logins.password, '.
+            'UNHEX(SHA2('."'".KEY_STR."'".', 256))'
+            .", ".INIT_VECTOR.') AS CHAR)'
+            .' LIKE "%'.$dltword.'%" ';
+        }else{
+            $SQLstatement=$SQLstatement.
+            'CAST(AES_DECRYPT(logins.password, '.
+            'UNHEX(SHA2('."'".KEY_STR."'".', 256))'
+            .", ".INIT_VECTOR.') AS CHAR)'
+            .'="'.$dltword.'" ';
+        }
+      }
+     $connection -> exec($SQLstatement);
+
+     $return = "Delete is done";
+    }
+    catch(PDOException $e){
+      $return = $e -> getMessage();
+    }
+    return $return;
+}
+
