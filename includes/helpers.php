@@ -83,6 +83,9 @@ function insertTupleBasedOnWords($username, $password, $firstname, $lastname, $e
 
       $connection = new PDO ("mysql:host=" .DBHOST."; dbname=" .DBNAME, DBUSER, DBPASS);
 
+      $SQLstatement="set block_encryption_mode = 'aes-256-cbc'";
+      $connection -> exec($SQLstatement);
+
       $SQLstatement='
       SELECT logins.user_name AS username
       FROM logins
@@ -196,6 +199,76 @@ function deleteTuple($attr, $dltword, $exact){
     catch(PDOException $e){
       $return = $e -> getMessage();
     }
+    return $return;
+}
+
+function updateTuple($attr, $ptnword, $exact, $rattr, $repword){
+    $return = "";
+
+    try{
+        include_once "config.php";
+
+        $connection = new PDO ("mysql:host=" .DBHOST."; dbname=" .DBNAME, DBUSER, DBPASS);
+        $connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+        $SQLstatement='SET SQL_SAFE_UPDATES=0';
+
+        $connection -> exec($SQLstatement);
+
+        $SQLstatement="set block_encryption_mode = 'aes-256-cbc'";
+        $connection -> exec($SQLstatement);
+
+        $SQLstatement='UPDATE logins, users, websites
+        SET
+        '.$rattr.'=';
+        if($rattr!="logins.password"){
+            $SQLstatement=$SQLstatement.'"'.$repword.'" ';
+            if($rattr=="logins.user_name"){
+                $SQLstatement=$SQLstatement.', users.user_name='.'"'.$repword.'" ';
+            }
+            if($rattr=="logins.website_name"){
+                $SQLstatement=$SQLstatement.', websites.website_name='.'"'.$repword.'" ';
+            }
+        }else{
+            $SQLstatement=$SQLstatement.
+            'AES_ENCRYPT('."'".$repword."'".', '.
+            'UNHEX(SHA2('."'".KEY_STR."'".', 256))'
+            .", ".INIT_VECTOR.') ';
+        }
+        $SQLstatement=$SQLstatement.' WHERE
+        users.user_name=logins.user_name
+        AND logins.website_name=websites.website_name
+        AND ';
+        if($attr!="logins.password"){
+            if($exact=="no"){
+                $SQLstatement=$SQLstatement.$attr.' LIKE "%'.$ptnword.'%" ';
+            }else{
+                $SQLstatement=$SQLstatement.$attr.'="'.$ptnword.'" ';
+            }
+          }else{
+            if($exact=="no"){
+                $SQLstatement=$SQLstatement.
+                'CAST(AES_DECRYPT(logins.password, '.
+                'UNHEX(SHA2('."'".KEY_STR."'".', 256))'
+                .", ".INIT_VECTOR.') AS CHAR)'
+                .' LIKE "%'.$ptnword.'%" ';
+            }else{
+                $SQLstatement=$SQLstatement.
+                'CAST(AES_DECRYPT(logins.password, '.
+                'UNHEX(SHA2('."'".KEY_STR."'".', 256))'
+                .", ".INIT_VECTOR.') AS CHAR)'
+                .'="'.$ptnword.'" ';
+            }
+          }
+         $connection -> exec($SQLstatement);
+         //$return=$SQLstatement;
+
+    }
+    catch(PDOException $e){
+        $return = $e -> getMessage();
+      }
+
     return $return;
 }
 

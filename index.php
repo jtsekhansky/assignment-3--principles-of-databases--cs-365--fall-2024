@@ -7,6 +7,7 @@ $noresult='';
 $searchresult='';
 $insertresult='';
 $deleteresult='';
+$updateresult='';
 if(strpos( $connection_successful, 'fail' ) !== false){
   $messagecolor = 'red';
 }
@@ -169,8 +170,79 @@ if(isset($_POST['search']) or isset($_POST['searchform']) or isset($_POST['rs'])
     </form>
     '.$deleteresult.'
     ';
+}elseif(isset($_POST['update']) or isset($_POST['updateform'])){
+    if(isset($_POST['updateform'])){
+        if(empty($_POST['attribute']) or empty($_POST['updateword']) or empty($_POST['exact']) or empty($_POST['replaceattribute']) or empty($_POST['replaceword'])){
+            $updateresult='<br><br><p>
+                    <font color="red">
+                fields and pattern must not be blank
+                </font>
+                </p>';
+        }else{
+            $updateresult=updateTuple(
+                $_POST['attribute'], $_POST['updateword'], $_POST['exact'], $_POST['replaceattribute'], $_POST['replaceword']
+            );
+        }
+
+
+    }
+    $actionscreen='
+    <form method="post" action="">
+            <input type="submit" class=btn name="updateform" value="RunUpdate" />
+            <fieldset>
+            <legend>Select field from list and enter pattern, then click on RunUPDATE button</legend>
+            <br>
+            <p>Select attribute to change</p>
+            <div>
+                <select name="replaceattribute" id="replaceattribute">
+                    <option value="logins.user_name">Username</option>
+                    <option value="logins.website_name">Website Name</option>
+                    <option value="logins.password">Password</option>
+                    <option value="logins.comment">Comment</option>
+                    <option value="users.first_name">First Name</option>
+                    <option value="users.last_name">Last Name</option>
+                    <option value="users.email">Email</option>
+                    <option value="websites.website_url">Website URL</option>
+                </select>
+            </div>
+            <div>
+                <label for="replaceword">Enter replacement value: </label>
+                <input type="text" id="replaceword" name="replaceword"/>
+            </div>
+            <br>
+            <p>Specify search pattern</p>
+            <div>
+                <select name="attribute" id="attribute">
+                    <option value="logins.user_name">Username</option>
+                    <option value="logins.website_name">Website Name</option>
+                    <option value="logins.password">Password</option>
+                    <option value="logins.comment">Comment</option>
+                    <option value="users.first_name">First Name</option>
+                    <option value="users.last_name">Last Name</option>
+                    <option value="users.email">Email</option>
+                    <option value="websites.website_url">Website URL</option>
+                </select>
+            </div>
+            <div>
+                <label for="updateword">Enter search pattern for update: </label>
+                <input type="text" id="updateword" name="updateword"/>
+            </div>
+            <br>
+            <div>
+                <p>Exact Match:</p>
+                <input type="radio" id="yes" name="exact" value="yes">
+                <label for="yes">yes</label>
+                <br>
+                <input type="radio" id="no" name="exact" value="no">
+                <label for="no">no</label>
+            </div>
+
+            </fieldset>
+    </form>
+    '.$updateresult.'
+    ';
 }
-//else{}
+
 ?>
 
 <!DOCTYPE HTML>
