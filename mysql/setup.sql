@@ -30,7 +30,7 @@ CREATE TABLE logins (
   password        VARBINARY(512)    NOT NULL,
   comment         VARCHAR(2000)    NOT NULL,
   update_time     DATETIME    NOT NULL,
-  PRIMARY KEY (user_name)
+  PRIMARY KEY (user_name, website_name)
 );
 
 INSERT INTO websites
